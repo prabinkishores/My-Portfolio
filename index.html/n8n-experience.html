@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>n8n Automation Workflows | Prabin Kishores</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    /* ========== CSS Variables ========== */
+    :root {
+      --primary: #7c3aed;
+      --secondary: #06b6d4;
+      --accent: #f97316;
+      --dark-bg: #0f172a;
+      --darker-bg: #020617;
+      --card-bg: rgba(15, 23, 42, 0.6);
+      --glass: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --muted: #cbd5e1;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    body.light {
+      --dark-bg: #f8fafc;
+      --darker-bg: #ffffff;
+      --card-bg: rgba(248, 250, 252, 0.8);
+      --glass: rgba(0, 0, 0, 0.05);
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: rgba(0, 0, 0, 0.1);
+    }
+
+    /* ========== Global Styles ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+      position: relative;
+    }
+
+    /* ========== Animated Background Elements ========== */
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      top: -200px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, var(--secondary), var(--accent));
+      bottom: -150px;
+      right: -50px;
+      animation-delay: 2s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      top: 50%;
+      right: -100px;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    /* ========== Header & Navigation ========== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px) saturate(120%);
+      background: rgba(15, 23, 42, 0.7);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -1px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .nav-links a:after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover:after {
+      width: 100%;
+    }
+
+    .back-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+    }
+
+    .theme-toggle {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.2));
+      transform: scale(1.1) rotate(20deg);
+    }
+
+    /* ========== Hero Section ========== */
+    .hero {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      margin: 1rem 0 0.5rem;
+      line-height: 1.2;
+      letter-spacing: -2px;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin: 1.5rem 0 2rem;
+      line-height: 1.6;
+    }
+
+    .workflow-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .summary-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(124, 58, 237, 0.2);
+    }
+
+    .summary-icon {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .summary-number {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* ========== Workflow Section ========== */
+    .workflow-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .workflow-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .workflow-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+      z-index: 10;
+    }
+
+    .workflow-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .workflow-header {
+      padding: 2rem 2rem 1rem;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(6, 182, 212, 0.1));
+      border-bottom: 1px solid var(--border);
+    }
+
+    .workflow-icon {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .workflow-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .workflow-status {
+      font-size: 0.85rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    .status-badge.active {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: var(--secondary);
+      color: var(--secondary);
+    }
+
+    .workflow-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .workflow-content {
+      padding: 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .workflow-description {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .workflow-flow {
+      background: rgba(124, 58, 237, 0.08);
+      border-left: 3px solid var(--primary);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .flow-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-step i {
+      color: var(--secondary);
+      font-weight: 700;
+    }
+
+    .workflow-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .workflow-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .workflow-feature i {
+      color: var(--secondary);
+      margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    .workflow-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 0.4rem 0.8rem;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--secondary);
+      transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(6, 182, 212, 0.25));
+      transform: translateY(-2px);
+    }
+
+    .workflow-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 50px rgba(124, 58, 237, 0.25);
+      border-color: var(--secondary);
+    }
+
+    /* ========== Learning Journey ========== */
+    .learning-section {
+      max-width: 1000px;
+      margin: 4rem auto;
+      padding: 3rem 2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .learning-section h2 {
+      font-size: 1.8rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .learning-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .learning-card {
+      padding: 1.5rem;
+      background: rgba(124, 58, 237, 0.08);
+      border-left: 3px solid var(--primary);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .learning-card:hover {
+      background: rgba(124, 58, 237, 0.15);
+      transform: translateX(4px);
+    }
+
+    .learning-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .learning-card p {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* ========== Stats Section ========== */
+    .workflow-stats {
+      max-width: 1000px;
+      margin: 4rem auto 0;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(124, 58, 237, 0.2);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ========== Footer ========== */
+    footer {
+      margin-top: 6rem;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.3);
+      text-align: center;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    footer p {
+      margin: 0.5rem 0;
+    }
+
+    footer a {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========== Responsive Design ========== */
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .workflow-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .workflow-card {
+        padding: 1.5rem;
+      }
+
+      .workflow-title {
+        font-size: 1.2rem;
+      }
+
+      .back-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <nav>
+      <a href="portfolio.html" class="logo">P.</a>
+      <ul class="nav-links">
+        <li><a href="portfolio.html">Home</a></li>
+        <li><a href="portfolio.html">About</a></li>
+        <li><a href="portfolio.html">Skills</a></li>
+        <li><a href="portfolio.html">Projects</a></li>
+        <li><a href="portfolio.html">Contact</a></li>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <button class="back-btn" onclick="window.history.back(); return false;">
+      <i class="fas fa-arrow-left"></i> Back to Portfolio
+    </button>
+
+    <h1>n8n <span class="highlight">Automation</span> Workflows</h1>
+    <p class="subtitle">Building Smart, Automated Solutions for Daily Tasks & Business Processes</p>
+
+    <div class="workflow-summary">
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-cogs"></i></div>
+        <div class="summary-number">1+</div>
+        <div class="summary-label">Active Projects</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="summary-number">Learning</div>
+        <div class="summary-label">First Steps</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-rocket"></i></div>
+        <div class="summary-number">Growing</div>
+        <div class="summary-label">Building Skills</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow Content Section -->
+  <section class="workflow-section">
+    <h2 class="section-title">Current Workflows & Projects</h2>
+    <div class="workflow-grid">
+      
+      <!-- Workflow 1: Daily Expense Tracker -->
+      <div class="workflow-card">
+        <div class="workflow-header">
+          <div class="workflow-icon"><i class="fas fa-receipt"></i></div>
+          <h3 class="workflow-title">Daily Expense Tracker</h3>
+          <div class="workflow-status">
+            <span class="status-badge">🔄 In Development</span>
+          </div>
+          <div class="workflow-meta">
+            <span><i class="fas fa-code-branch"></i> First Project</span>
+          </div>
+        </div>
+        <div class="workflow-content">
+          <p class="workflow-description">
+            An intelligent expense tracking automation that captures expenses from emails and messages, calculates totals at the end of each day, and sends automated summary reports.
+          </p>
+          
+          <div class="workflow-flow">
+            <div class="flow-step">
+              <i class="fas fa-envelope"></i>
+              <span>Email & Message Parser - Captures expense entries</span>
+            </div>
+            <div class="flow-step">
+              <i class="fas fa-arrow-down"></i>
+              <span></span>
+            </div>
+            <div class="flow-step">
+              <i class="fas fa-database"></i>
+              <span>Data Processing - Categorizes and validates</span>
+            </div>
+            <div class="flow-step">
+              <i class="fas fa-arrow-down"></i>
+              <span></span>
+            </div>
+            <div class="flow-step">
+              <i class="fas fa-calculator"></i>
+              <span>Calculation - Sums up daily expenses</span>
+            </div>
+            <div class="flow-step">
+              <i class="fas fa-arrow-down"></i>
+              <span></span>
+            </div>
+            <div class="flow-step">
+              <i class="fas fa-envelope-circle-check"></i>
+              <span>Auto Email - Sends daily summary report</span>
+            </div>
+          </div>
+
+          <div class="workflow-features">
+            <h4 style="color: var(--text); margin-bottom: 0.75rem;">Key Features:</h4>
+            <div class="workflow-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Email trigger - Captures messages with expense data</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Message parser - Extracts amount and category</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Data validation - Ensures correct formatting</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Daily calculations - Aggregates total expenses</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Auto email notification - Sends end-of-day summary</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Category breakdown - Shows expense distribution</span>
+            </div>
+          </div>
+
+          <div class="workflow-tags">
+            <span class="tag">Email Trigger</span>
+            <span class="tag">Data Parser</span>
+            <span class="tag">Calculation</span>
+            <span class="tag">Email Notification</span>
+            <span class="tag">Automation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workflow 2: Learning Path -->
+      <div class="workflow-card">
+        <div class="workflow-header">
+          <div class="workflow-icon"><i class="fas fa-lightbulb"></i></div>
+          <h3 class="workflow-title">Learning & Exploration</h3>
+          <div class="workflow-status">
+            <span class="status-badge active">📚 In Progress</span>
+          </div>
+          <div class="workflow-meta">
+            <span><i class="fas fa-compass"></i> Skill Building</span>
+          </div>
+        </div>
+        <div class="workflow-content">
+          <p class="workflow-description">
+            Currently exploring n8n capabilities and building foundational knowledge in automation, API integration, and workflow design through hands-on projects.
+          </p>
+
+          <div class="workflow-features">
+            <h4 style="color: var(--text); margin-bottom: 0.75rem;">Learning Focus:</h4>
+            <div class="workflow-feature">
+              <i class="fas fa-star"></i>
+              <span>Understanding n8n core concepts and nodes</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-star"></i>
+              <span>Building simple to complex workflows</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-star"></i>
+              <span>API integration and data transformation</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-star"></i>
+              <span>Error handling and workflow optimization</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-star"></i>
+              <span>Real-world use case implementation</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-star"></i>
+              <span>Best practices in automation design</span>
+            </div>
+          </div>
+
+          <div class="workflow-tags">
+            <span class="tag">Learning</span>
+            <span class="tag">Exploration</span>
+            <span class="tag">n8n Basics</span>
+            <span class="tag">API Calls</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workflow 3: Future Projects -->
+      <div class="workflow-card">
+        <div class="workflow-header">
+          <div class="workflow-icon"><i class="fas fa-rocket"></i></div>
+          <h3 class="workflow-title">Future Workflow Ideas</h3>
+          <div class="workflow-status">
+            <span class="status-badge">💡 Planning</span>
+          </div>
+          <div class="workflow-meta">
+            <span><i class="fas fa-calendar"></i> Upcoming</span>
+          </div>
+        </div>
+        <div class="workflow-content">
+          <p class="workflow-description">
+            Exploring and planning additional automation projects to expand knowledge and solve more complex business process challenges.
+          </p>
+
+          <div class="workflow-features">
+            <h4 style="color: var(--text); margin-bottom: 0.75rem;">Planned Ideas:</h4>
+            <div class="workflow-feature">
+              <i class="fas fa-lightbulb"></i>
+              <span>Invoice processing and organization automation</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-lightbulb"></i>
+              <span>Data synchronization between multiple platforms</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-lightbulb"></i>
+              <span>Scheduled report generation and distribution</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-lightbulb"></i>
+              <span>Webhook integration for real-time updates</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-lightbulb"></i>
+              <span>Database automation and maintenance tasks</span>
+            </div>
+            <div class="workflow-feature">
+              <i class="fas fa-lightbulb"></i>
+              <span>Multi-step approval workflows</span>
+            </div>
+          </div>
+
+          <div class="workflow-tags">
+            <span class="tag">Ideas</span>
+            <span class="tag">Future</span>
+            <span class="tag">Planning</span>
+            <span class="tag">Scalable</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Learning Journey Section -->
+  <section class="learning-section">
+    <h2><i class="fas fa-graduation-cap"></i> My n8n Learning Journey</h2>
+    <div class="learning-content">
+      <div class="learning-card">
+        <h3>🎯 Current Status</h3>
+        <p>Just starting my automation journey with n8n. Building my first real-world project to solve practical daily challenges. Learning by doing!</p>
+      </div>
+      <div class="learning-card">
+        <h3>🚀 What I'm Doing</h3>
+        <p>Developing a daily expense tracker that automatically captures expenses from emails/messages and sends end-of-day summaries. Practical, useful, and a great learning tool.</p>
+      </div>
+      <div class="learning-card">
+        <h3>📈 Next Steps</h3>
+        <p>After completing the expense tracker, I plan to tackle more complex workflows, explore advanced nodes, and build automation solutions for business processes.</p>
+      </div>
+      <div class="learning-card">
+        <h3>💪 Growth Mindset</h3>
+        <p>Embracing the learning curve, experimenting with different node combinations, and applying best practices. Every project makes me more confident in automation design.</p>
+      </div>
+      <div class="learning-card">
+        <h3>🤝 Community</h3>
+        <p>Engaging with n8n community, learning from others' workflows, and contributing my own solutions. Sharing knowledge is part of my growth.</p>
+      </div>
+      <div class="learning-card">
+        <h3>🎓 Resources</h3>
+        <p>Using official n8n documentation, community forums, tutorials, and YouTube to accelerate learning. Practical experience is the best teacher.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow Stats -->
+  <section class="workflow-stats">
+    <div class="stat-card">
+      <div class="stat-number">1+</div>
+      <div class="stat-label">Active Projects</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">6+</div>
+      <div class="stat-label">n8n Nodes Used</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Hands-On Learning</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">Growing</div>
+      <div class="stat-label">Skill Level</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Passionate about automation and building smart solutions that save time and increase productivity.</p>
+    <p><strong>Exploring n8n:</strong> Learn more about my daily expense tracker and other automation projects in action.</p>
+    <p style="margin-top: 2rem; font-size: 0.9rem;">© 2026 Prabin Kishores. Crafted with ✨ and a passion for automation.</p>
+  </footer>
+
+  <script>
+    // ========== Theme Toggle ==========
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const body = document.body;
+      const saved = localStorage.getItem('theme') || 'dark';
+
+      if (saved === 'light') {
+        body.classList.add('light');
+        toggle.textContent = '☀️';
+      }
+
+      toggle.addEventListener('click', () => {
+        body.classList.toggle('light');
+        const isLight = body.classList.contains('light');
+        toggle.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      });
+    })();
+
+    // ========== Navigation Handler ==========
+    document.querySelectorAll('.logo, .nav-links a').forEach(element => {
+      element.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'index.html';
+      });
+    });
+
+    // ========== Back Button Handler ==========
+    document.querySelectorAll('.back-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.history.back();
+      });
+    });
+
+    // ========== Intersection Observer for Animations ==========
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.workflow-card, .stat-card, .summary-card, .learning-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
