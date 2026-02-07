@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>HTML Frontend Development | Prabin Kishores</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    /* ========== CSS Variables ========== */
+    :root {
+      --primary: #7c3aed;
+      --secondary: #06b6d4;
+      --accent: #f97316;
+      --dark-bg: #0f172a;
+      --darker-bg: #020617;
+      --card-bg: rgba(15, 23, 42, 0.6);
+      --glass: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --muted: #cbd5e1;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    body.light {
+      --dark-bg: #f8fafc;
+      --darker-bg: #ffffff;
+      --card-bg: rgba(248, 250, 252, 0.8);
+      --glass: rgba(0, 0, 0, 0.05);
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: rgba(0, 0, 0, 0.1);
+    }
+
+    /* ========== Global Styles ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+      position: relative;
+    }
+
+    /* ========== Animated Background Elements ========== */
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      top: -200px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, var(--secondary), var(--accent));
+      bottom: -150px;
+      right: -50px;
+      animation-delay: 2s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      top: 50%;
+      right: -100px;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    /* ========== Header & Navigation ========== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px) saturate(120%);
+      background: rgba(15, 23, 42, 0.7);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -1px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .nav-links a:after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover:after {
+      width: 100%;
+    }
+
+    .back-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+    }
+
+    .theme-toggle {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.2));
+      transform: scale(1.1) rotate(20deg);
+    }
+
+    /* ========== Hero Section ========== */
+    .hero {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      margin: 1rem 0 0.5rem;
+      line-height: 1.2;
+      letter-spacing: -2px;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin: 1.5rem 0 2rem;
+      line-height: 1.6;
+    }
+
+    .skills-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .summary-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(124, 58, 237, 0.2);
+    }
+
+    .summary-icon {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .summary-number {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* ========== Skills Grid ========== */
+    .skills-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .skill-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+      transition: left 0.4s ease;
+    }
+
+    .skill-card:hover::before {
+      left: 100%;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--border);
+      box-shadow: 0 15px 40px rgba(124, 58, 237, 0.2);
+    }
+
+    .skill-icon {
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .skill-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .skill-description {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .skill-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .skill-list i {
+      color: var(--secondary);
+      margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    /* ========== Projects Section ========== */
+    .projects-section {
+      max-width: 1000px;
+      margin: 4rem auto;
+      padding: 0 2rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .project-image {
+      height: 180px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .project-content {
+      padding: 2rem;
+    }
+
+    .project-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .project-description {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-tech {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tech-tag {
+      padding: 0.3rem 0.8rem;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--secondary);
+    }
+
+    .project-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 50px rgba(124, 58, 237, 0.25);
+      border-color: var(--secondary);
+    }
+
+    /* ========== Learning Path ========== */
+    .learning-section {
+      max-width: 1000px;
+      margin: 4rem auto;
+      padding: 3rem 2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .learning-section h2 {
+      font-size: 1.8rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .learning-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .learning-item {
+      padding: 1.5rem;
+      background: rgba(124, 58, 237, 0.08);
+      border-left: 3px solid var(--primary);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .learning-item:hover {
+      background: rgba(124, 58, 237, 0.15);
+      transform: translateX(4px);
+    }
+
+    .learning-item h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .learning-item p {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* ========== Stats Section ========== */
+    .stats-section {
+      max-width: 1000px;
+      margin: 4rem auto 0;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(124, 58, 237, 0.2);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ========== Footer ========== */
+    footer {
+      margin-top: 6rem;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.3);
+      text-align: center;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    footer p {
+      margin: 0.5rem 0;
+    }
+
+    footer a {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========== Responsive Design ========== */
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .skill-card {
+        padding: 1.5rem;
+      }
+
+      .back-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <nav>
+      <a href="index.html" class="logo">P.</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html">About</a></li>
+        <li><a href="index.html">Skills</a></li>
+        <li><a href="index.html">Projects</a></li>
+        <li><a href="index.html">Contact</a></li>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <button class="back-btn" onclick="window.history.back(); return false;">
+      <i class="fas fa-arrow-left"></i> Back to Portfolio
+    </button>
+
+    <h1>HTML <span class="highlight">Frontend</span> Development</h1>
+    <p class="subtitle">Building Beautiful, Responsive, and User-Friendly Web Interfaces</p>
+
+    <div class="skills-summary">
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-code"></i></div>
+        <div class="summary-number">Learning</div>
+        <div class="summary-label">HTML & CSS Journey</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-desktop"></i></div>
+        <div class="summary-number">3+</div>
+        <div class="summary-label">Projects Built</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-mobile"></i></div>
+        <div class="summary-number">Responsive</div>
+        <div class="summary-label">Design Focus</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="skills-section">
+    <h2 class="section-title">Core Skills & Knowledge</h2>
+    <div class="skills-grid">
+      
+      <!-- Skill 1: HTML -->
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-code"></i></div>
+        <h3>Semantic HTML</h3>
+        <p class="skill-description">Building well-structured, accessible HTML markup that follows best practices and web standards.</p>
+        <ul class="skill-list">
+          <li><i class="fas fa-check-circle"></i> Semantic HTML5 tags</li>
+          <li><i class="fas fa-check-circle"></i> Proper document structure</li>
+          <li><i class="fas fa-check-circle"></i> Accessibility standards (a11y)</li>
+          <li><i class="fas fa-check-circle"></i> Forms and input elements</li>
+          <li><i class="fas fa-check-circle"></i> Metadata and SEO</li>
+        </ul>
+      </div>
+
+      <!-- Skill 2: CSS -->
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-palette"></i></div>
+        <h3>CSS Styling</h3>
+        <p class="skill-description">Creating visually appealing designs with modern CSS techniques and best practices.</p>
+        <ul class="skill-list">
+          <li><i class="fas fa-check-circle"></i> Flexbox layouts</li>
+          <li><i class="fas fa-check-circle"></i> CSS Grid systems</li>
+          <li><i class="fas fa-check-circle"></i> Color and typography</li>
+          <li><i class="fas fa-check-circle"></i> Transitions and animations</li>
+          <li><i class="fas fa-check-circle"></i> CSS variables</li>
+        </ul>
+      </div>
+
+      <!-- Skill 3: Responsive Design -->
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-mobile"></i></div>
+        <h3>Responsive Design</h3>
+        <p class="skill-description">Building websites that look great on all devices - mobile, tablet, and desktop.</p>
+        <ul class="skill-list">
+          <li><i class="fas fa-check-circle"></i> Mobile-first approach</li>
+          <li><i class="fas fa-check-circle"></i> Media queries</li>
+          <li><i class="fas fa-check-circle"></i> Flexible layouts</li>
+          <li><i class="fas fa-check-circle"></i> Touch-friendly interfaces</li>
+          <li><i class="fas fa-check-circle"></i> Device optimization</li>
+        </ul>
+      </div>
+
+      <!-- Skill 4: Web Components -->
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-cube"></i></div>
+        <h3>Web Components</h3>
+        <p class="skill-description">Building reusable, modular components for maintainable frontend architecture.</p>
+        <ul class="skill-list">
+          <li><i class="fas fa-check-circle"></i> Component design patterns</li>
+          <li><i class="fas fa-check-circle"></i> BEM methodology</li>
+          <li><i class="fas fa-check-circle"></i> DRY principles</li>
+          <li><i class="fas fa-check-circle"></i> Modular CSS</li>
+          <li><i class="fas fa-check-circle"></i> Maintainable code</li>
+        </ul>
+      </div>
+
+      <!-- Skill 5: Performance -->
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-bolt"></i></div>
+        <h3>Performance</h3>
+        <p class="skill-description">Optimizing websites for speed, usability, and better user experience.</p>
+        <ul class="skill-list">
+          <li><i class="fas fa-check-circle"></i> Image optimization</li>
+          <li><i class="fas fa-check-circle"></i> CSS minification</li>
+          <li><i class="fas fa-check-circle"></i> Fast loading times</li>
+          <li><i class="fas fa-check-circle"></i> Code organization</li>
+          <li><i class="fas fa-check-circle"></i> Best practices</li>
+        </ul>
+      </div>
+
+      <!-- Skill 6: Tools & Workflow -->
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-wrench"></i></div>
+        <h3>Tools & Workflow</h3>
+        <p class="skill-description">Using modern development tools and workflows for efficient development process.</p>
+        <ul class="skill-list">
+          <li><i class="fas fa-check-circle"></i> Code editors (VS Code)</li>
+          <li><i class="fas fa-check-circle"></i> Browser DevTools</li>
+          <li><i class="fas fa-check-circle"></i> Version control (Git)</li>
+          <li><i class="fas fa-check-circle"></i> File organization</li>
+          <li><i class="fas fa-check-circle"></i> Development practices</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="projects-section">
+    <h2 class="section-title">Frontend Projects</h2>
+    <div class="projects-grid">
+      
+      <div class="project-card">
+        <div class="project-image">
+          <i class="fas fa-globe"></i>
+        </div>
+        <div class="project-content">
+          <h3 class="project-title">Portfolio Website</h3>
+          <p class="project-description">A modern personal portfolio website showcasing my work, skills, and experience with smooth animations and responsive design.</p>
+          <div class="project-tech">
+            <span class="tech-tag">HTML</span>
+            <span class="tech-tag">CSS</span>
+            <span class="tech-tag">Responsive</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-image">
+          <i class="fas fa-desktop"></i>
+        </div>
+        <div class="project-content">
+          <h3 class="project-title">Landing Page</h3>
+          <p class="project-description">Clean and professional landing pages with eye-catching layouts, call-to-action buttons, and optimized user experience.</p>
+          <div class="project-tech">
+            <span class="tech-tag">HTML</span>
+            <span class="tech-tag">CSS</span>
+            <span class="tech-tag">Design</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-image">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div class="project-content">
+          <h3 class="project-title">Mobile-First Layouts</h3>
+          <p class="project-description">Responsive websites built with mobile-first approach, ensuring excellent experience across all screen sizes and devices.</p>
+          <div class="project-tech">
+            <span class="tech-tag">Mobile</span>
+            <span class="tech-tag">Responsive</span>
+            <span class="tech-tag">Flexbox</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Learning Path Section -->
+  <section class="learning-section">
+    <h2><i class="fas fa-graduation-cap"></i> My Learning Journey</h2>
+    <div class="learning-content">
+      <div class="learning-item">
+        <h3>📚 Current Learning</h3>
+        <p>Mastering the fundamentals of HTML and CSS, building solid foundations in frontend development with hands-on projects.</p>
+      </div>
+      <div class="learning-item">
+        <h3>🎯 Focus Areas</h3>
+        <p>Semantic HTML, responsive design patterns, CSS layouts (Flexbox, Grid), and modern web design best practices.</p>
+      </div>
+      <div class="learning-item">
+        <h3>🚀 Next Goals</h3>
+        <p>Expanding into JavaScript fundamentals, improving interactivity, and building dynamic web experiences while maintaining clean code.</p>
+      </div>
+      <div class="learning-item">
+        <h3>💡 Approach</h3>
+        <p>Learning through building real projects, understanding design principles, and following web standards to create quality websites.</p>
+      </div>
+      <div class="learning-item">
+        <h3>🔄 Continuous Growth</h3>
+        <p>Staying updated with latest CSS features, design trends, and best practices to build modern, performant websites.</p>
+      </div>
+      <div class="learning-item">
+        <h3>🎨 Creative Side</h3>
+        <p>Combining technical skills with creative design thinking to build beautiful, intuitive user interfaces that users love.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="stat-card">
+      <div class="stat-number">3+</div>
+      <div class="stat-label">Projects Completed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Core Skills</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Responsive</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">Growing</div>
+      <div class="stat-label">Skill Level</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Passionate about creating beautiful, accessible, and performant web experiences.</p>
+    <p><strong>My Approach:</strong> Clean code, user-centered design, and continuous learning.</p>
+    <p style="margin-top: 2rem; font-size: 0.9rem;">© 2026 Prabin Kishores. Crafted with ✨ and love for web design.</p>
+  </footer>
+
+  <script>
+    // ========== Theme Toggle ==========
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const body = document.body;
+      const saved = localStorage.getItem('theme') || 'dark';
+
+      if (saved === 'light') {
+        body.classList.add('light');
+        toggle.textContent = '☀️';
+      }
+
+      toggle.addEventListener('click', () => {
+        body.classList.toggle('light');
+        const isLight = body.classList.contains('light');
+        toggle.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      });
+    })();
+
+    // ========== Navigation Handler ==========
+    document.querySelectorAll('.logo, .nav-links a').forEach(element => {
+      element.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'index.html';
+      });
+    });
+
+    // ========== Back Button Handler ==========
+    document.querySelectorAll('.back-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.history.back();
+      });
+    });
+
+    // ========== Intersection Observer for Animations ==========
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.skill-card, .project-card, .stat-card, .summary-card, .learning-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

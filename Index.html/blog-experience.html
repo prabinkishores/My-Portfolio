@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Blog Writing Experience | Prabin Kishores</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    /* ========== CSS Variables ========== */
+    :root {
+      --primary: #7c3aed;
+      --secondary: #06b6d4;
+      --accent: #f97316;
+      --dark-bg: #0f172a;
+      --darker-bg: #020617;
+      --card-bg: rgba(15, 23, 42, 0.6);
+      --glass: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --muted: #cbd5e1;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    body.light {
+      --dark-bg: #f8fafc;
+      --darker-bg: #ffffff;
+      --card-bg: rgba(248, 250, 252, 0.8);
+      --glass: rgba(0, 0, 0, 0.05);
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: rgba(0, 0, 0, 0.1);
+    }
+
+    /* ========== Global Styles ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+      position: relative;
+    }
+
+    /* ========== Animated Background Elements ========== */
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      top: -200px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, var(--secondary), var(--accent));
+      bottom: -150px;
+      right: -50px;
+      animation-delay: 2s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      top: 50%;
+      right: -100px;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    /* ========== Header & Navigation ========== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px) saturate(120%);
+      background: rgba(15, 23, 42, 0.7);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -1px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .nav-links a:after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover:after {
+      width: 100%;
+    }
+
+    .back-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+    }
+
+    .theme-toggle {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.2));
+      transform: scale(1.1) rotate(20deg);
+    }
+
+    /* ========== Hero Section ========== */
+    .hero {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      margin: 1rem 0 0.5rem;
+      line-height: 1.2;
+      letter-spacing: -2px;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin: 1.5rem 0 2rem;
+      line-height: 1.6;
+    }
+
+    .blog-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .summary-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(124, 58, 237, 0.2);
+    }
+
+    .summary-icon {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .summary-number {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* ========== Blog Section ========== */
+    .blog-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .blog-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+      z-index: 10;
+    }
+
+    .blog-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .blog-header {
+      padding: 2rem 2rem 1rem;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(6, 182, 212, 0.1));
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blog-icon {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .blog-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .blog-content {
+      padding: 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-description {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .blog-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .blog-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .blog-feature i {
+      color: var(--secondary);
+      margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    .blog-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 0.4rem 0.8rem;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--secondary);
+      transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(6, 182, 212, 0.25));
+      transform: translateY(-2px);
+    }
+
+    .blog-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 50px rgba(124, 58, 237, 0.25);
+      border-color: var(--secondary);
+    }
+
+    /* ========== Stats Section ========== */
+    .blog-stats {
+      max-width: 1000px;
+      margin: 4rem auto 0;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(124, 58, 237, 0.2);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ========== Footer ========== */
+    footer {
+      margin-top: 6rem;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.3);
+      text-align: center;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    footer p {
+      margin: 0.5rem 0;
+    }
+
+    footer a {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========== Responsive Design ========== */
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .blog-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .blog-summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .blog-card {
+        padding: 1.5rem;
+      }
+
+      .blog-title {
+        font-size: 1.2rem;
+      }
+
+      .back-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header>
+    <nav>
+      <a href="index.html" class="logo">P.</a>
+      <ul class="nav-links">
+        <li><a href="portfolio.html">About</a></li>
+        <li><a href="portfolio.html">Skills</a></li>
+        <li><a href="portfolio.html#projects">Projects</a></li>
+        <li><a href="portfolio.html#contact">Contact</a></li>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <button class="back-btn" onclick="window.history.back(); return false;">
+      <i class="fas fa-arrow-left"></i> Back to Portfolio
+    </button>
+
+    <h1>Blog <span class="highlight">Writing</span> & Content Creation</h1>
+    <p class="subtitle">Sharing Knowledge, Building Community, Creating Impact</p>
+
+    <div class="blog-summary">
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-pen-fancy"></i></div>
+        <div class="summary-number">100+</div>
+        <div class="summary-label">Articles & Posts</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-users"></i></div>
+        <div class="summary-number">5K+</div>
+        <div class="summary-label">Engaged Readers</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-star"></i></div>
+        <div class="summary-number">2+</div>
+        <div class="summary-label">Years of Writing</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Content Section -->
+  <section class="blog-section">
+    <h2 class="section-title">Content Expertise</h2>
+    <div class="blog-grid">
+      
+      <!-- Blog 1: Technical Blogging -->
+      <div class="blog-card">
+        <div class="blog-header">
+          <div class="blog-icon"><i class="fas fa-code"></i></div>
+          <h3 class="blog-title">Technical Blogging</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-bookmark"></i> In-Depth Guides</span>
+          </div>
+        </div>
+        <div class="blog-content">
+          <p class="blog-description">
+            Writing comprehensive technical articles that break down complex concepts into understandable content for developers and tech enthusiasts.
+          </p>
+          <div class="blog-features">
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Web Development tutorials and best practices</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>n8n automation workflows and tips</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Code examples and implementation guides</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Technology trends and analysis</span>
+            </div>
+          </div>
+          <div class="blog-tags">
+            <span class="tag">Web Dev</span>
+            <span class="tag">Tutorials</span>
+            <span class="tag">Coding</span>
+            <span class="tag">Best Practices</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog 2: Tutorial Creation -->
+      <div class="blog-card">
+        <div class="blog-header">
+          <div class="blog-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3 class="blog-title">Tutorial Creation</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-play"></i> Step-by-Step Guides</span>
+          </div>
+        </div>
+        <div class="blog-content">
+          <p class="blog-description">
+            Creating structured, easy-to-follow tutorials that help learners master new skills and technologies from beginner to advanced levels.
+          </p>
+          <div class="blog-features">
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Beginner to advanced level content</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Hands-on project-based learning</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Real-world use cases and scenarios</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Code repositories and resources</span>
+            </div>
+          </div>
+          <div class="blog-tags">
+            <span class="tag">Tutorials</span>
+            <span class="tag">Learning</span>
+            <span class="tag">Education</span>
+            <span class="tag">Projects</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog 3: Story-Telling -->
+      <div class="blog-card">
+        <div class="blog-header">
+          <div class="blog-icon"><i class="fas fa-book-open"></i></div>
+          <h3 class="blog-title">Story-Telling & Experiences</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-heart"></i> Personal Narratives</span>
+          </div>
+        </div>
+        <div class="blog-content">
+          <p class="blog-description">
+            Sharing real-life experiences, lessons learned, and personal journey stories that resonate with and inspire the community.
+          </p>
+          <div class="blog-features">
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Career journey and growth stories</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Lessons learned from failures and successes</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Industry insights and observations</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Motivational and inspirational content</span>
+            </div>
+          </div>
+          <div class="blog-tags">
+            <span class="tag">Stories</span>
+            <span class="tag">Experience</span>
+            <span class="tag">Inspiration</span>
+            <span class="tag">Growth</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog 4: Knowledge Sharing -->
+      <div class="blog-card">
+        <div class="blog-header">
+          <div class="blog-icon"><i class="fas fa-lightbulb"></i></div>
+          <h3 class="blog-title">Knowledge Sharing & Tips</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-gift"></i> Quick Wins</span>
+          </div>
+        </div>
+        <div class="blog-content">
+          <p class="blog-description">
+            Sharing quick tips, productivity hacks, and actionable insights that readers can implement immediately in their work.
+          </p>
+          <div class="blog-features">
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Productivity and efficiency tips</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Tools and resources recommendations</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Time-saving hacks and shortcuts</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Industry best practices compilation</span>
+            </div>
+          </div>
+          <div class="blog-tags">
+            <span class="tag">Tips</span>
+            <span class="tag">Tricks</span>
+            <span class="tag">Resources</span>
+            <span class="tag">Productivity</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog 5: Automation & n8n -->
+      <div class="blog-card">
+        <div class="blog-header">
+          <div class="blog-icon"><i class="fas fa-robot"></i></div>
+          <h3 class="blog-title">Automation Content</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-cogs"></i> n8n & Workflows</span>
+          </div>
+        </div>
+        <div class="blog-content">
+          <p class="blog-description">
+            In-depth guides on n8n automation, workflow creation, API integrations, and process optimization for businesses.
+          </p>
+          <div class="blog-features">
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>n8n workflow tutorials and guides</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>API integration and setup</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Automation best practices</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Business process optimization</span>
+            </div>
+          </div>
+          <div class="blog-tags">
+            <span class="tag">n8n</span>
+            <span class="tag">Automation</span>
+            <span class="tag">Workflows</span>
+            <span class="tag">Integration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog 6: Documentation -->
+      <div class="blog-card">
+        <div class="blog-header">
+          <div class="blog-icon"><i class="fas fa-file-alt"></i></div>
+          <h3 class="blog-title">Technical Documentation</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-clipboard"></i> Reference Guides</span>
+          </div>
+        </div>
+        <div class="blog-content">
+          <p class="blog-description">
+            Creating clear, comprehensive documentation for projects, APIs, and systems to ensure ease of use and maintenance.
+          </p>
+          <div class="blog-features">
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>API documentation and references</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Installation and setup guides</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Troubleshooting and FAQs</span>
+            </div>
+            <div class="blog-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Architecture and design documentation</span>
+            </div>
+          </div>
+          <div class="blog-tags">
+            <span class="tag">Documentation</span>
+            <span class="tag">Technical</span>
+            <span class="tag">Reference</span>
+            <span class="tag">Guides</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Blog Stats -->
+  <section class="blog-stats">
+    <div class="stat-card">
+      <div class="stat-number">100+</div>
+      <div class="stat-label">Articles Written</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">5K+</div>
+      <div class="stat-label">Total Readers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">1000+</div>
+      <div class="stat-label">Monthly Views</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">2+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Passionate about sharing knowledge and inspiring others to learn and grow.</p>
+    <p><strong>Read My Latest Articles:</strong> Check out my blog for new content on tech, automation, and personal growth.</p>
+    <p style="margin-top: 2rem; font-size: 0.9rem;">© 2026 Prabin Kishores. Crafted with ✨ and passion for great writing.</p>
+  </footer>
+
+  <script>
+    // ========== Theme Toggle ==========
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const body = document.body;
+      const saved = localStorage.getItem('theme') || 'dark';
+
+      if (saved === 'light') {
+        body.classList.add('light');
+        toggle.textContent = '☀️';
+      }
+
+      toggle.addEventListener('click', () => {
+        body.classList.toggle('light');
+        const isLight = body.classList.contains('light');
+        toggle.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      });
+    })();
+
+    // ========== Navigation Handler ==========
+    document.querySelectorAll('.logo, .nav-links a').forEach(element => {
+      element.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'index.html';
+      });
+    });
+
+    // ========== Back Button Handler ==========
+    document.querySelectorAll('.back-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.history.back();
+      });
+    });
+
+    // ========== Intersection Observer for Animations ==========
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.blog-card, .stat-card, .summary-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
