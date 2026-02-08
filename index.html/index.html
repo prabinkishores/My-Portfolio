@@ -118,7 +118,8 @@
       backdrop-filter: blur(12px) saturate(120%);
       background: rgba(15, 23, 42, 0.7);
       border-bottom: 1px solid var(--border);
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease-in-out;
+      will-change: transform;
     }
 
     nav {
@@ -598,6 +599,16 @@
       margin: 0.5rem 0;
     }
 
+    footer a {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
     /* ========== Responsive Design ========== */
     @media (max-width: 768px) {
       nav {
@@ -711,7 +722,7 @@
   <section class="about" id="about">
     <h2>About Me</h2>
     <p>
-     I’m a warehouse and logistics professional with hands-on experience in day to-day operations, process optimization, and coordination on the floor. Alongside my core logistics background, I actively explore technology and automation—especially tools like n8n to improve efficiency and simplify repetitive operational tasks.
+     I'm a warehouse and logistics professional with hands-on experience in day to-day operations, process optimization, and coordination on the floor. Alongside my core logistics background, I actively explore technology and automation—especially tools like n8n to improve efficiency and simplify repetitive operational tasks.
     </p>
     <p>
      Beyond warehouse operations, I enjoy learning new technologies, writing technical blogs based on real-world experience, and sharing practical insights that help others understand both logistics and tech concepts. I strongly believe in continuous learning, process improvement, and knowledge sharing.
@@ -734,7 +745,7 @@
       </div>
 
       <div class="skill-card" onclick="window.location.href='blog-experience.html'" style="cursor: pointer;">
-  <div class="skill-icon"><i class="fas fa-pen-fancy"></i></div>
+        <div class="skill-icon"><i class="fas fa-pen-fancy"></i></div>
         <h3>Blog Writing</h3>
         <p>Technical content, Tutorial creation, Story-telling, Knowledge sharing</p>
         <div class="skill-bar">
@@ -743,8 +754,8 @@
         <div class="skill-percentage"><span>90%</span></div>
       </div>
 
-     <div class="skill-card" onclick="window.location.href='n8n-experience.html'" style="cursor: pointer;">
-  <div class="skill-icon"><i class="fas fa-cogs"></i></div>
+      <div class="skill-card" onclick="window.location.href='n8n-experience.html'" style="cursor: pointer;">
+        <div class="skill-icon"><i class="fas fa-cogs"></i></div>
         <h3>n8n Workflows</h3>
         <p>Workflow automation, API integration, Process optimization</p>
         <div class="skill-bar">
@@ -755,7 +766,7 @@
 
       <!-- Row 2 -->
       <div class="skill-card" onclick="window.location.href='html-frontend-experience.html'" style="cursor: pointer;">
-  <div class="skill-icon"><i class="fas fa-code"></i></div>
+        <div class="skill-icon"><i class="fas fa-code"></i></div>
         <h3>HTML Frontend</h3>
         <p>Semantic HTML, CSS styling, Responsive design, Web components</p>
         <div class="skill-bar">
@@ -774,8 +785,8 @@
         <div class="skill-percentage"><span>85%</span></div>
       </div>
 
-  <div class="skill-card" onclick="window.location.href='explore-ai-experience.html'" style="cursor: pointer;">
-  <div class="skill-icon"><i class="fas fa-brain"></i></div>
+      <div class="skill-card" onclick="window.location.href='explore-ai-experience.html'" style="cursor: pointer;">
+        <div class="skill-icon"><i class="fas fa-brain"></i></div>
         <h3>Explore AI</h3>
         <p>AI fundamentals, Machine learning concepts, AI tools & APIs, Implementation</p>
         <div class="skill-bar">
@@ -915,6 +926,50 @@
       });
     });
 
+    // ========== Header Hide/Show on Scroll (Mobile) ==========
+    (function() {
+      const header = document.querySelector('header');
+      let lastScrollTop = 0;
+      let scrollTimeout;
+
+      window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Clear previous timeout
+        clearTimeout(scrollTimeout);
+
+        // Only apply hide/show on mobile devices (max-width: 768px)
+        if (window.innerWidth <= 768) {
+          if (currentScroll > lastScrollTop && currentScroll > 100) {
+            // Scrolling DOWN - Hide header
+            header.style.transform = 'translateY(-100%)';
+          } else {
+            // Scrolling UP - Show header
+            header.style.transform = 'translateY(0)';
+          }
+        } else {
+          // Always show header on desktop
+          header.style.transform = 'translateY(0)';
+        }
+
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+      });
+
+      // Show header when at the top
+      window.addEventListener('scroll', function() {
+        if (window.pageYOffset <= 100) {
+          header.style.transform = 'translateY(0)';
+        }
+      });
+
+      // Handle window resize
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+          header.style.transform = 'translateY(0)';
+        }
+      });
+    })();
+
     // ========== Intersection Observer for Animations ==========
     const observerOptions = {
       threshold: 0.1,
@@ -939,5 +994,3 @@
   </script>
 </body>
 </html>
-
-
