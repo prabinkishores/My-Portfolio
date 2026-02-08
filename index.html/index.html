@@ -674,7 +674,7 @@
   <!-- Header & Navigation -->
   <header>
     <nav>
-      <div class="logo">P</div>
+      <div class="logo">P.</div>
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#skills">Skills</a></li>
@@ -930,35 +930,40 @@
     (function() {
       const header = document.querySelector('header');
       let lastScrollTop = 0;
-      let scrollTimeout;
+      let isHeaderHidden = false;
 
       window.addEventListener('scroll', function() {
         const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-
-        // Clear previous timeout
-        clearTimeout(scrollTimeout);
 
         // Only apply hide/show on mobile devices (max-width: 768px)
         if (window.innerWidth <= 768) {
           if (currentScroll > lastScrollTop && currentScroll > 100) {
             // Scrolling DOWN - Hide header
-            header.style.transform = 'translateY(-100%)';
-          } else {
+            if (!isHeaderHidden) {
+              header.style.transform = 'translateY(-100%)';
+              isHeaderHidden = true;
+            }
+          } else if (currentScroll < lastScrollTop) {
             // Scrolling UP - Show header
-            header.style.transform = 'translateY(0)';
+            if (isHeaderHidden) {
+              header.style.transform = 'translateY(0)';
+              isHeaderHidden = false;
+            }
           }
         } else {
           // Always show header on desktop
           header.style.transform = 'translateY(0)';
+          isHeaderHidden = false;
         }
 
         lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
       });
 
-      // Show header when at the top
+      // Show header when at the top of page
       window.addEventListener('scroll', function() {
         if (window.pageYOffset <= 100) {
           header.style.transform = 'translateY(0)';
+          isHeaderHidden = false;
         }
       });
 
@@ -966,6 +971,7 @@
       window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
           header.style.transform = 'translateY(0)';
+          isHeaderHidden = false;
         }
       });
     })();
